@@ -1,10 +1,26 @@
 
 "use client"
 import { DeleteIcon, EditIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
-import { Box, Button, Flex, Heading, ListItem, Stack, UnorderedList, useColorMode } from "@chakra-ui/react";
+import { Box, Button, Flex, FormControl, FormLabel, Heading, Input, ListItem, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, UnorderedList, useColorMode, useDisclosure } from "@chakra-ui/react";
+import React, { useState } from "react";
 
 export default function Home() {
   const { colorMode, toggleColorMode } = useColorMode()
+  const {isOpen, onOpen, onClose} = useDisclosure()
+  const [task, setTask] = useState<string>("")
+
+  const initialRef = React.useRef(null)
+  const finalRef = React.useRef(null)
+
+  const handleSubmit = (event: any) => {
+    event.preventDefault();
+    const data ={
+      task,
+    }
+
+    console.log("data: ", data)
+  }
+  
   return (
     <>
     <Flex
@@ -52,6 +68,7 @@ export default function Home() {
                 fontFamily={"sans-serif"}
                 fontSize={"30px"}
                 colorScheme="purple"
+                onClick={onOpen}
               >
                 Casdatrar
               </Button>
@@ -203,6 +220,33 @@ export default function Home() {
           </Flex>
         </Flex>
       </Flex>
+
+      {/* modal here */}
+      <Modal
+        initialFocusRef={initialRef}
+        finalFocusRef={finalRef}
+        isOpen={isOpen}
+        onClose={onClose}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Create your account</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+            <FormControl>
+              <FormLabel>Tarefas</FormLabel>
+              <Input onChange={(e: any) => setTask(e.target.value)} value={task} ref={initialRef} placeholder='digite sua tarefa' />
+            </FormControl>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button  colorScheme='blue' onClick={handleSubmit} mr={3}>
+              Save
+            </Button>
+            <Button onClick={onClose}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 }
